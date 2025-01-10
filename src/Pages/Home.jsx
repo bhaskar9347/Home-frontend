@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import './styles.css';
+import './logo.png';
 
 function Home() {
   const [task, setTask] = useState(''); // Input field value
@@ -33,6 +35,22 @@ function Home() {
     });
   };
 
+  // Delete task from a category
+  const deleteTask = (category, taskToDelete) => {
+    setTasks((prevTasks) => {
+      const updatedCategory = prevTasks[category].filter((t) => t !== taskToDelete);
+      return { ...prevTasks, [category]: updatedCategory };
+    });
+  };
+
+  // Clear all tasks in a category
+  const clearCategory = (category) => {
+    setTasks((prevTasks) => ({
+      ...prevTasks,
+      [category]: [],
+    }));
+  };
+
   return (
     <div className="home">
       <form
@@ -65,20 +83,15 @@ function Home() {
             {tasks.todo.map((t, index) => (
               <li key={index}>
                 {t}
-                <button
-                  onClick={() => moveTask('todo', 'ongoing', t)}
-                >
-                  Move to Ongoing
-                </button>
-                <button
-                  onClick={() => moveTask('todo', 'completed', t)}
-                >
-                  Move to Completed
-                </button>
+                <button onClick={() => moveTask('todo', 'ongoing', t)}>Move to Ongoing</button>
+                <button onClick={() => moveTask('todo', 'completed', t)}>Move to Completed</button>
+                <button onClick={() => deleteTask('todo', t)}>Delete</button>
               </li>
             ))}
           </ul>
+          <button onClick={() => clearCategory('todo')}>Clear All</button>
         </div>
+        
         {/* Ongoing Section */}
         <div className="task-section">
           <h2>Ongoing Tasks</h2>
@@ -86,20 +99,15 @@ function Home() {
             {tasks.ongoing.map((t, index) => (
               <li key={index}>
                 {t}
-                <button
-                  onClick={() => moveTask('ongoing', 'todo', t)}
-                >
-                  Move to To-Do
-                </button>
-                <button
-                  onClick={() => moveTask('ongoing', 'completed', t)}
-                >
-                  Move to Completed
-                </button>
+                <button onClick={() => moveTask('ongoing', 'todo', t)}>Move to To-Do</button>
+                <button onClick={() => moveTask('ongoing', 'completed', t)}>Move to Completed</button>
+                <button onClick={() => deleteTask('ongoing', t)}>Delete</button>
               </li>
             ))}
           </ul>
+          <button onClick={() => clearCategory('ongoing')}>Clear All</button>
         </div>
+
         {/* Completed Section */}
         <div className="task-section">
           <h2>Completed Tasks</h2>
@@ -107,19 +115,13 @@ function Home() {
             {tasks.completed.map((t, index) => (
               <li key={index}>
                 {t}
-                <button
-                  onClick={() => moveTask('completed', 'todo', t)}
-                >
-                  Move to To-Do
-                </button>
-                <button
-                  onClick={() => moveTask('completed', 'ongoing', t)}
-                >
-                  Move to Ongoing
-                </button>
+                <button onClick={() => moveTask('completed', 'todo', t)}>Move to To-Do</button>
+                <button onClick={() => moveTask('completed', 'ongoing', t)}>Move to Ongoing</button>
+                <button onClick={() => deleteTask('completed', t)}>Delete</button>
               </li>
             ))}
           </ul>
+          <button onClick={() => clearCategory('completed')}>Clear All</button>
         </div>
       </div>
     </div>
